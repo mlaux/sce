@@ -84,7 +84,7 @@ public class AccountSelectDialog extends JDialog implements ActionListener {
 			if(sel.equals("existing")) {
 				account = (AccountManager.Account) combo.getSelectedItem();
 			} else if(sel.equals("new")) {
-				AccountManager acm = new AccountManager(parent, AccountManager.Intent.MANAGE);
+				AccountManager acm = new AccountManager(parent, AccountManager.Intent.CREATE);
 				acm.setVisible(true);
 				account = acm.getInfo();
 			} else if(sel.equals("none")) {
