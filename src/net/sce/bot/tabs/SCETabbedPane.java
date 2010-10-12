@@ -42,12 +42,14 @@ public class SCETabbedPane extends JTabbedPane {
 		accsel.setVisible(true);
 		AccountManager.Account acc = accsel.getInfo();
 		if(acc == null) return; // they pressed cancel
-		addTab(acc.username, new Bot(acc));
-		setSelectedIndex(indexOfTab(acc.username));
+		Bot bot = new Bot(acc);
+		addTab(acc.username, bot);
+		setSelectedIndex(indexOfComponent(bot));
+		new Thread(bot).start();
 	}
 	
 	public abstract static class Tab extends JPanel {
-		static final Dimension tab_size = new Dimension(765, 503);
+		static final Dimension tab_size = new Dimension(780, 530);
 		private List<ActionListener> listeners = new ArrayList<ActionListener>();
 		
 		public Dimension getPreferredSize() {

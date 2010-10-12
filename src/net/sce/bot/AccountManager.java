@@ -67,7 +67,7 @@ public class AccountManager extends JDialog implements ActionListener, ListSelec
 			accountsList = new JList(accountsModel);
 			accountsList.addListSelectionListener(this);
 			JScrollPane sp = new JScrollPane(accountsList);
-			sp.setPreferredSize(new Dimension(150, 100));
+			sp.setPreferredSize(new Dimension(200, 100));
 			west.add(sp, BorderLayout.CENTER);
 			
 			JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));

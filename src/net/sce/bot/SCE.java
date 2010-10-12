@@ -40,7 +40,7 @@ public class SCE extends JFrame implements ActionListener {
 		}
 	}
 	
-	public static void main(String[] args) throws Exception { 
+	public static void main(String[] args) throws Exception {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		new SCE();
 	}
