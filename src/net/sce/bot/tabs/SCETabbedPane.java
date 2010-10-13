@@ -1,5 +1,6 @@
 package net.sce.bot.tabs;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -51,6 +52,10 @@ public class SCETabbedPane extends JTabbedPane {
 	public abstract static class Tab extends JPanel {
 		static final Dimension tab_size = new Dimension(780, 530);
 		private List<ActionListener> listeners = new ArrayList<ActionListener>();
+		
+		public Tab() {
+			super(new BorderLayout());
+		}
 		
 		public Dimension getPreferredSize() {
 			return tab_size;

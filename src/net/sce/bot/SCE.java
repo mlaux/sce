@@ -11,6 +11,7 @@ import net.sce.bot.tabs.SCETabbedPane;
 import net.sce.bot.tabs.WelcomeTab;
 
 public class SCE extends JFrame implements ActionListener {
+	// uppercase constant names? what?
 	public static final String app_name = "SCE";
 	
 	private SCETabbedPane stp;
@@ -45,6 +46,7 @@ public class SCE extends JFrame implements ActionListener {
 		new SCE();
 	}
 	
+	// Update title bar every 5 seconds based on mem. usage
 	class MemoryTracker extends Thread {
 		public MemoryTracker() { setDaemon(true); }
 		public void run() {

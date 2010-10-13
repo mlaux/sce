@@ -28,9 +28,7 @@ public class WelcomeTab extends SCETabbedPane.Tab implements HyperlinkListener {
 	private JEditorPane editor;
 	
 	public WelcomeTab() {
-		setLayout(new BorderLayout());
 		setBorder(new CompoundBorder(new EmptyBorder(10, 10, 10, 10), new EtchedBorder()));
-
 		editor = new JEditorPane();
 		try {
 			editor.putClientProperty(BasicHTML.documentBaseKey, new File(System.getProperty("user.dir")).toURI().toURL());

@@ -1,4 +1,4 @@
-package net.sce.bot;
+package net.sce.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

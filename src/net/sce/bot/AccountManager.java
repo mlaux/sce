@@ -53,7 +53,7 @@ public class AccountManager extends JDialog implements ActionListener, ListSelec
 		this.accountsModel = new DefaultListModel();
 		
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		//setResizable(false);
+		setResizable(false);
 		
 		JPanel content = new JPanel(new BorderLayout(10, 0));
 		content.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -93,6 +93,7 @@ public class AccountManager extends JDialog implements ActionListener, ListSelec
 		passwordField = new JPasswordField(12);
 		bankpinField = new JTextField(4);
 		
+		// gridbag: best layout ever!!!
 		JPanel grid = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0; gbc.gridy = 0;

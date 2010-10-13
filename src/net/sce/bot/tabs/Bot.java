@@ -3,13 +3,12 @@ package net.sce.bot.tabs;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
-import java.awt.BorderLayout;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 
 import net.sce.bot.AccountManager;
-import net.sce.bot.ParamParser;
+import net.sce.util.ParamParser;
 
 public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 	public static URL base_url, jar_url;
@@ -20,7 +19,6 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 	
 	public Bot(AccountManager.Account acc) {
 		account = acc;
-		setLayout(new BorderLayout());
 	}
 	
 	public void run() {
@@ -32,7 +30,17 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 			validate();
 			loader.init();
 			loader.start();
-			client = findClient(cl, loader);
+			for(Field fd : cl.getDeclaredFields()) {
+				if(fd.getType().equals(Applet.class)) {
+					fd.setAccessible(true);
+					Applet app;
+					do {
+						app = (Applet) fd.get(loader);
+						Thread.sleep(100);
+					} while(app == null);
+					client = app;
+				}
+			}
 			running = true;
 			while(running) Thread.sleep(1000);
 			remove(loader);
@@ -45,17 +53,11 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 		}
 	}
 	
-	private Applet findClient(Class<?> loader, Object inst) throws Exception {
-		for(Field fd : loader.getDeclaredFields())
-			if(fd.getType().equals(Applet.class)) {
-				fd.setAccessible(true);
-				Applet app;
-				while((app = (Applet) fd.get(inst)) == null) Thread.sleep(100);
-				return app;
-			}
-		return null;
-	}
+	// Should we restrict these?
+	public Applet getClient() { return client; }
+	public AccountManager.Account getAccount() { return account; }
 	
+	// Boring implemented methods
 	public void onClose() { running = false; }
 	public String getParameter(String name) { return ParamParser.get(name); }
 	public boolean isActive() { return true; }
