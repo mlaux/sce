@@ -1,6 +1,10 @@
 package net.sce.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,12 +12,32 @@ public class FieldAccess {
 	private Map<String, ClientField> fields;
 	private ClassLoader classLoader;
 	
-	public FieldAccess(ClassLoader loader) {
+	public FieldAccess(ClassLoader cloader, URL url) throws IOException {
 		fields = new HashMap<String, ClientField>();
-		classLoader = loader;
-		// TODO Parse class/field info into the map from some source
-		// File on disk or downloaded from the site
-		// perhaps make constructor take source as parameter
+		classLoader = cloader;
+		
+		// Parse class/field info into the map from some source
+		// TODO Make this more flexible, right now it only accepts a specific
+		// file format, perhaps add a HookReader interface or something and
+		// make the constructor take an instance of that.
+		
+		// Format is hook_name:class_name:field_name
+		// for example, cameraX:jd:Fc
+		// Empty lines and lines starting with # are ignored
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+		String line;
+		while((line = br.readLine()) != null) {
+			if(line.isEmpty() || line.startsWith("#")) continue;
+			
+			String[] parts = line.split(":");
+			if(parts.length < 3) {
+				System.out.println("malformed line in hooks file: " + line);
+				continue;
+			}
+			fields.put(parts[0], new ClientField(parts[1], parts[2]));
+		}
+		br.close();
 	}
 	
 	public Object get(String key, Object on) {
@@ -61,6 +85,9 @@ public class FieldAccess {
 		return ((Double) get(key, on)).doubleValue();
 	}
 	
+	/**
+	 * Storage class for class/field names
+	 */
 	private class ClientField {
 		private String className;
 		private String fieldName;
