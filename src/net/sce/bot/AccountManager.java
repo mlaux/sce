@@ -1,12 +1,12 @@
 package net.sce.bot;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -15,23 +15,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class AccountManager extends JDialog implements ActionListener, ListSelectionListener {
 	public enum Intent { CREATE, MANAGE };
@@ -164,8 +147,14 @@ public class AccountManager extends JDialog implements ActionListener, ListSelec
 			String user = usernameField.getText();
 			String pass = new String(passwordField.getPassword());
 			String pin = bankpinField.getText();
+			if(pin == null || pin.equalsIgnoreCase("0000"))
+				pin = "none";
 			if(user.length() == 0 || user.contains(":") || pass.length() == 0 || pass.contains(":")) {
 				JOptionPane.showMessageDialog(this, "You must enter a valid username and password.");
+				return;
+			}
+			if(pin.length() == 0 || pin.length() > 4) {
+				JOptionPane.showMessageDialog(this, "Pin must be under 4 digits, and greater than 0.  (Put none or 0000 if you have no pin).");
 				return;
 			}
 			if(intent == Intent.CREATE) {
