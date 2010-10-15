@@ -50,7 +50,7 @@ public class SCETabbedPane extends JTabbedPane {
 	}
 	
 	public abstract static class Tab extends JPanel {
-		static final Dimension tab_size = new Dimension(780, 530);
+		static final Dimension tab_size = new Dimension(765, 503);
 		private List<ActionListener> listeners = new ArrayList<ActionListener>();
 		
 		public Tab() {
