@@ -14,9 +14,10 @@ public class SCE extends JFrame implements ActionListener {
 	// uppercase constant names? what?
 	public static final String app_name = "SCE";
 	
+	private static SCE instance;
 	private SCETabbedPane stp;
 	
-	public SCE() {
+	private SCE() {
 		super(app_name);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setIconImage(new ImageIcon("icon.gif").getImage());
@@ -41,9 +42,15 @@ public class SCE extends JFrame implements ActionListener {
 		}
 	}
 	
+	public static SCE getInstance() {
+		if(instance == null)
+			instance = new SCE();
+		return instance;
+	}
+	
 	public static void main(String[] args) throws Exception {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		new SCE();
+		getInstance();
 	}
 	
 	// Update title bar every 5 seconds based on mem. usage

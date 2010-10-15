@@ -13,7 +13,7 @@ import net.sce.util.ParamParser;
 public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 	public static URL base_url, jar_url;
 	
-	private Applet client;
+	private Applet client, loader;
 	private volatile boolean running = false;
 	private AccountManager.Account account;
 	
@@ -24,7 +24,7 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 	public void run() {
 		try {
 			Class<?> cl = new URLClassLoader(new URL[] { jar_url }).loadClass("loader");
-			Applet loader = (Applet) cl.newInstance();
+			loader = (Applet) cl.newInstance();
 			loader.setStub(this);
 			add(loader);
 			validate();
@@ -55,6 +55,7 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 	
 	// Should we restrict these?
 	public Applet getClient() { return client; }
+	public Applet getLoader() { return loader; }
 	public AccountManager.Account getAccount() { return account; }
 	
 	// Boring implemented methods

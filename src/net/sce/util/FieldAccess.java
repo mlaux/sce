@@ -4,19 +4,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FieldAccess {
-	private Map<String, ClientField> fields;
+	private Map<String, FieldOrMethod> fields;
 	private ClassLoader classLoader;
 	
 	public FieldAccess(ClassLoader cloader, URL url) throws IOException {
-		fields = new HashMap<String, ClientField>();
+		fields = new HashMap<String, FieldOrMethod>();
 		classLoader = cloader;
 		
-		// Parse class/field info into the map from some source
+		// Parse class/field/method info into the map from some source
 		// TODO Make this more flexible, right now it only accepts a specific
 		// file format, perhaps add a HookReader interface or something and
 		// make the constructor take an instance of that.
@@ -35,16 +36,16 @@ public class FieldAccess {
 				System.out.println("malformed line in hooks file: " + line);
 				continue;
 			}
-			fields.put(parts[0], new ClientField(parts[1], parts[2]));
+			fields.put(parts[0], new FieldOrMethod(parts[1], parts[2]));
 		}
 		br.close();
 	}
 	
 	public Object get(String key, Object on) {
 		try {
-			ClientField cf = fields.get(key);
+			FieldOrMethod cf = fields.get(key);
 			Class<?> cl = classLoader.loadClass(cf.className);
-			Field f = cl.getDeclaredField(cf.fieldName);
+			Field f = cl.getDeclaredField(cf.compName);
 			return f.get(on);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -85,16 +86,29 @@ public class FieldAccess {
 		return ((Double) get(key, on)).doubleValue();
 	}
 	
+	public Object callMethod(String key, Object on, Object... args) {
+		FieldOrMethod fi = fields.get(key);
+		try {
+			Class<?> cl = classLoader.loadClass(fi.className);
+			Method mth = cl.getDeclaredMethod(fi.compName);
+			mth.setAccessible(true);
+			return mth.invoke(on, args);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/**
 	 * Storage class for class/field names
 	 */
-	private class ClientField {
+	private class FieldOrMethod {
 		private String className;
-		private String fieldName;
+		private String compName;
 		
-		private ClientField(String c, String f) {
+		private FieldOrMethod(String c, String f) {
 			className = c;
-			fieldName = f;
+			compName = f;
 		}
 	}
 }
