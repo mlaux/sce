@@ -59,7 +59,7 @@ public class AccountManager extends JDialog implements ActionListener, ListSelec
 			button.addActionListener(this);
 			button.setPreferredSize(new Dimension(25, 25));
 			buttons.add(button);
-			button = new JButton(new ImageIcon("minus.png"));
+			button = new JButton(new ImageIcon("close.png"));
 			button.setActionCommand("remove");
 			button.addActionListener(this);
 			button.setPreferredSize(new Dimension(25, 25));

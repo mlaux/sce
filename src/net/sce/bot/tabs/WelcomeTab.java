@@ -58,5 +58,6 @@ public class WelcomeTab extends SCETabbedPane.Tab implements HyperlinkListener {
 			}
 		}
 	}
+	
 	public void onClose() { }
 }
