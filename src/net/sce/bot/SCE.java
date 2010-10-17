@@ -1,11 +1,13 @@
 package net.sce.bot;
 
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -19,6 +21,7 @@ import net.sce.util.SCEEventQueue;
 public class SCE extends JFrame implements ActionListener {
 	// uppercase constant names? what?
 	public static final String app_name = "SCE";
+	public static final String website = "http://www.scebot.com/";
 	
 	private static SCE instance;
 	private SCETabbedPane stp;
@@ -65,6 +68,12 @@ public class SCE extends JFrame implements ActionListener {
 		else if(cmd.equals("accounts")) {
 			AccountManager acm = new AccountManager(this, AccountManager.Intent.MANAGE);
 			acm.setVisible(true);
+		} else if(cmd.equals("opensite")) {
+			try {
+				Desktop.getDesktop().browse(new URI(website));
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 	

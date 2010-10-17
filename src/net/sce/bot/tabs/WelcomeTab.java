@@ -11,11 +11,12 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.basic.BasicHTML;
+import javax.swing.text.Document;
 
 public class WelcomeTab extends SCETabbedPane.Tab implements HyperlinkListener {
 	static final String base_url = "http://strictfp.com/sce/";
 	static final String welcome = 
-			"<center>" +
+			"<html><head></head><body><center>" +
 			"<img src=\"file:welcome.png\"><br>" +
 			"<table cellspacing=\"10\"><tr>" +
 			"<td><a href=\"func:newbot\"><img src=\"file:newbot.png\" border=\"0\"></a></td>" + 
@@ -23,7 +24,7 @@ public class WelcomeTab extends SCETabbedPane.Tab implements HyperlinkListener {
 			"</tr><tr>" + 
 			"<td><a href=\"page:store.html\"><img src=\"file:scriptstore.png\" border=\"0\"></a></td>" +
 			"<td><a href=\"func:opensite\"><img src=\"file:visitwebsite.png\" border=\"0\"></a></td>" +
-			"</tr></table></center>";
+			"</tr></table></center></body></html>";
 	
 	private JEditorPane editor;
 	
@@ -55,6 +56,10 @@ public class WelcomeTab extends SCETabbedPane.Tab implements HyperlinkListener {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
+			} else if(cmd.equals("home")) {
+				Document doc = editor.getEditorKit().createDefaultDocument();
+				editor.setDocument(doc);
+				editor.setText(welcome);
 			}
 		}
 	}
