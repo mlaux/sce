@@ -27,7 +27,7 @@ public class SCE extends JFrame implements ActionListener {
 	private SCE() {
 		super(app_name);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setIconImage(new ImageIcon("icon.gif").getImage());
+		setIconImage(new ImageIcon("icon.png").getImage());
 		
 		stp = new SCETabbedPane();
 		WelcomeTab wt = new WelcomeTab();

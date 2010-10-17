@@ -8,6 +8,8 @@ import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
 import javax.swing.ImageIcon;
 
+import net.sce.bot.tabs.Bot;
+
 public class Canvas extends Component implements Accessible {
 	private static final String base = "canvas";
 	private static int nameCounter = 0;
@@ -26,12 +28,11 @@ public class Canvas extends Component implements Accessible {
 		render.drawImage(game, 0, 0, null);
 		
 		// paint bot graphics here
-		// ((Bot) getParent().getParent()).paintScript() or whatever
-		// For now draw the icon and a nice message
-		Image im = new ImageIcon("icon.gif").getImage();
-		render.drawImage(im, 30, 30, null);
-		render.setColor(Color.white);
-		render.drawString("Hello SCE World!", 65, 50);
+		((Bot) getParent().getParent()).doClientPainting(render);
+		
+		// Draw an icon
+		Image im = new ImageIcon("icon.png").getImage();
+		render.drawImage(im, getWidth() - 32, getHeight() - 32, null);
 		
 		Graphics g = super.getGraphics();
 		g.drawImage(bot, 0, 0, null);
@@ -39,8 +40,7 @@ public class Canvas extends Component implements Accessible {
 	}
 	
 	private void checkImages() {
-		Component comp = getParent().getParent();
-		Dimension dim = comp.getPreferredSize();
+		Dimension dim = getSize();
 		if(bot == null || game == null 
 				|| bot.getWidth() != dim.width || bot.getHeight() != dim.height) {
 			bot = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
