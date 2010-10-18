@@ -54,12 +54,12 @@ public class AccountManager extends JDialog implements ActionListener, ListSelec
 			west.add(sp, BorderLayout.CENTER);
 			
 			JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-			JButton button = new JButton(new ImageIcon("plus.png"));
+			JButton button = new JButton(new ImageIcon(SCE.icon_base + "plus.png"));
 			button.setActionCommand("add");
 			button.addActionListener(this);
 			button.setPreferredSize(new Dimension(25, 25));
 			buttons.add(button);
-			button = new JButton(new ImageIcon("close.png"));
+			button = new JButton(new ImageIcon(SCE.icon_base + "close.png"));
 			button.setActionCommand("remove");
 			button.addActionListener(this);
 			button.setPreferredSize(new Dimension(25, 25));

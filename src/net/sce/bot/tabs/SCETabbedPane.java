@@ -18,6 +18,7 @@ import javax.swing.JTabbedPane;
 
 import net.sce.bot.AccountManager;
 import net.sce.bot.AccountSelectDialog;
+import net.sce.bot.SCE;
 
 public class SCETabbedPane extends JTabbedPane {
 	private List<SCETabbedPane.Tab> tabs;
@@ -75,7 +76,7 @@ public class SCETabbedPane extends JTabbedPane {
 			setFocusable(false);
 			add(new JLabel(title));
 			
-			JLabel label = new JLabel(new ImageIcon("close.png"));
+			JLabel label = new JLabel(new ImageIcon(SCE.icon_base + "close.png"));
 			label.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) { comp.onClose(); SCETabbedPane.this.remove(comp); }
 			});

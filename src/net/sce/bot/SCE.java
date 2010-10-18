@@ -21,6 +21,7 @@ import net.sce.util.SCEEventQueue;
 public class SCE extends JFrame implements ActionListener {
 	// uppercase constant names? what?
 	public static final String app_name = "SCE";
+	public static final String icon_base = "images/";
 	public static final String website = "http://www.scebot.com/";
 	
 	private static SCE instance;
@@ -30,7 +31,7 @@ public class SCE extends JFrame implements ActionListener {
 	private SCE() {
 		super(app_name);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setIconImage(new ImageIcon("icon.png").getImage());
+		setIconImage(new ImageIcon(icon_base + "icon.png").getImage());
 		
 		stp = new SCETabbedPane();
 		WelcomeTab wt = new WelcomeTab();
@@ -55,8 +56,8 @@ public class SCE extends JFrame implements ActionListener {
 		gbc.anchor = GridBagConstraints.NORTHEAST;
 
 		inputButton = new JToggleButton("Human input");
-		inputButton.setIcon(new ImageIcon("yes.png"));
-		inputButton.setSelectedIcon(new ImageIcon("no.png"));
+		inputButton.setIcon(new ImageIcon(icon_base + "yes.png"));
+		inputButton.setSelectedIcon(new ImageIcon(icon_base + "no.png"));
 		inputButton.setActionCommand("input");
 		inputButton.addActionListener(this);
 		glassPane.add(inputButton, gbc);

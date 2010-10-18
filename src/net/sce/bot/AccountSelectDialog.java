@@ -34,7 +34,7 @@ public class AccountSelectDialog extends JDialog implements ActionListener {
 		
 		JPanel content = new JPanel(new BorderLayout(10, 0));
 		content.setBorder(new EmptyBorder(10, 10, 10, 10));
-		content.add(new JLabel(new ImageIcon("key.png")), BorderLayout.WEST);
+		content.add(new JLabel(new ImageIcon(SCE.icon_base + "key.png")), BorderLayout.WEST);
 		
 		JPanel choice = new JPanel(new GridLayout(0, 1));
 		choice.setBorder(new TitledBorder(""));
