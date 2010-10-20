@@ -1,8 +1,8 @@
 package net.sce.script;
 
-import java.util.Map;
-
 import net.sce.bot.tabs.Bot;
+
+import java.util.Map;
 
 public abstract class Script extends WrapperProvider implements Runnable {
 	private Map<String, String> arguments;
@@ -33,6 +33,8 @@ public abstract class Script extends WrapperProvider implements Runnable {
 	
 	public abstract void onStart();
 	public abstract void onStop();
+	public abstract void onPause();
+	public abstract void onResume();
 
 	public void script() { }
 	public int loop() { return -1; }
