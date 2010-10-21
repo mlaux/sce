@@ -46,6 +46,7 @@ public class FieldAccess {
 			FieldOrMethod cf = fields.get(key);
 			Class<?> cl = classLoader.loadClass(cf.className);
 			Field f = cl.getDeclaredField(cf.compName);
+			f.setAccessible(true);
 			return f.get(on);
 		} catch(Exception e) {
 			e.printStackTrace();
