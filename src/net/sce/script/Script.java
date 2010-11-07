@@ -1,14 +1,12 @@
 package net.sce.script;
 
-import net.sce.bot.tabs.Bot;
-
 import java.util.Map;
 
 public abstract class Script extends WrapperProvider implements Runnable {
 	private Map<String, String> arguments;
 	
-	public Script(Bot bot, Map<String, String> args) {
-		super(bot);
+	public Script(API api, Map<String, String> args) {
+		super(api);
 		arguments = args;
 	}
 	

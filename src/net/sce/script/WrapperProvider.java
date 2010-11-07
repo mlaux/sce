@@ -1,14 +1,13 @@
 package net.sce.script;
 
-import net.sce.bot.tabs.Bot;
 import net.sce.script.types.GameObject;
 import net.sce.script.types.NPC;
 import net.sce.script.types.Player;
 
 public class WrapperProvider {
-	private Bot bot;
+	private API api;
 	
-	protected WrapperProvider(Bot b) { bot = b; }
+	protected WrapperProvider(API a) { api = a; }
 	
 	protected Player getMyPlayer() { return null; }
 	

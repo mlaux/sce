@@ -1,5 +1,6 @@
 package net.sce.bot;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.GridBagConstraints;
@@ -10,12 +11,16 @@ import java.awt.event.ActionListener;
 import java.net.URI;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
 import net.sce.bot.tabs.SCETabbedPane;
 import net.sce.bot.tabs.WelcomeTab;
+import net.sce.debug.DebugSystem;
 import net.sce.util.SCEEventQueue;
 
 public class SCE extends JFrame implements ActionListener {
@@ -39,13 +44,13 @@ public class SCE extends JFrame implements ActionListener {
 		stp.addTab("Welcome", wt);
 		
 		add(stp);
-		addUserInputButton();
+		addTopButtons();
 		pack();
 		setVisible(true);
 		new MemoryTracker().start();
 	}
 	
-	public void addUserInputButton() {
+	public void addTopButtons() {
 		Container glassPane = (Container) getRootPane().getGlassPane();
 		glassPane.setVisible(true);
 		glassPane.setLayout(new GridBagLayout());
@@ -55,12 +60,24 @@ public class SCE extends JFrame implements ActionListener {
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.NORTHEAST;
 
+		JPanel buttons = new JPanel();
+		buttons.setOpaque(false);
 		inputButton = new JToggleButton("Human input");
+		inputButton.setFocusable(false);
 		inputButton.setIcon(new ImageIcon(icon_base + "yes.png"));
 		inputButton.setSelectedIcon(new ImageIcon(icon_base + "no.png"));
 		inputButton.setActionCommand("input");
 		inputButton.addActionListener(this);
-		glassPane.add(inputButton, gbc);
+		
+		JButton menu = new JButton("Debug");
+		menu.setFocusable(false);
+		menu.setIcon(new ImageIcon(icon_base + "debug.png"));
+		menu.setActionCommand("debug");
+		menu.addActionListener(this);
+		
+		buttons.add(menu);
+		buttons.add(inputButton);
+		glassPane.add(buttons, gbc);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -75,6 +92,9 @@ public class SCE extends JFrame implements ActionListener {
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
+		} else if(cmd.equals("debug")) {
+			Component c = (Component) e.getSource();
+			DebugSystem.getMenu().show(c, 0, c.getHeight());
 		}
 	}
 	
@@ -87,6 +107,7 @@ public class SCE extends JFrame implements ActionListener {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		instance = new SCE();
 		Toolkit.getDefaultToolkit().getSystemEventQueue().push(new SCEEventQueue());

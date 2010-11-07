@@ -3,7 +3,7 @@ package net.sce.bot.tabs;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
-import java.awt.Color;
+import java.awt.Canvas;
 import java.awt.Graphics;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sce.bot.AccountManager;
+import net.sce.debug.DebugSystem;
+import net.sce.script.API;
 import net.sce.script.Paintable;
 import net.sce.script.input.InputManager;
 import net.sce.util.FieldAccess;
@@ -28,6 +30,8 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 	private FieldAccess fieldAccess;
 	private InputManager inputManager;
 	private List<Paintable> paintables;
+	
+	private API api;
 	
 	public Bot(AccountManager.Account acc) {
 		account = acc;
@@ -57,9 +61,6 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 			initClientDependencies();
 			running = true;
 			while (running) {
-				// XXX test purposes, moves mouse around applet randomly, remove eventually
-				// Point pt = new Point((int) (Math.random() * 765), (int) (Math.random() * 503));
-				// inputManager.moveMouse(pt.x, pt.y);
 				Thread.sleep(1000);
 			}
 			remove(loader);
@@ -79,31 +80,23 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		api = new API(this);
+		
 		inputManager = new InputManager(loader);
 		paintables.add(inputManager);
-		paintables.add(new Paintable() {
-			public void paint(Graphics g) {
-				// Paints the camera variables to do some testing.
-				// TODO System to turn paint debug on/off via a menu in the bot
-				//      or with function keys. Needs to work independently per-bot
-				g.setColor(Color.cyan);
-				g.drawString("Camera X: " + fieldAccess.getInt("camera.x", null), 15, 30);
-				g.drawString("Camera Y: " + fieldAccess.getInt("camera.y", null), 15, 45);
-				g.drawString("Camera Z: " + fieldAccess.getInt("camera.z", null), 15, 60);
-				g.drawString("Camera pitch: " + fieldAccess.getInt("camera.pitch", null), 15, 75);
-				g.drawString("Camera yaw: " + fieldAccess.getInt("camera.yaw", null), 15, 90);
-			}
-		});
 	}
 	
 	public void doClientPainting(Graphics g) {
 		for(Paintable pt : paintables) pt.paint(g);
+		DebugSystem.draw(g, this);
 	}
 	
 	// Should we restrict these?
 	public Applet getClient() { return client; }
+	public Canvas getCanvas() { return (Canvas) loader.getComponentAt(0, 0); }
 	public Applet getLoader() { return loader; }
 	public AccountManager.Account getAccount() { return account; }
+	public API getAPI() { return api; }
 	public FieldAccess getFieldAccess() { return fieldAccess; }
 	
 	// Boring implemented methods

@@ -18,7 +18,7 @@ public class Canvas extends Component implements Accessible {
 	private BufferedImage game;
 
 	private static final long serialVersionUID = -2284879212465893870L;
-  
+
 	public Graphics getGraphics() {
 		// need to wait till component is added to do this,
 		// so we can't just make the images in the constructor
@@ -51,6 +51,8 @@ public class Canvas extends Component implements Accessible {
 	public Canvas() { 
 		
 	}
+	
+	public String toString() { return "SCE Canvas"; }
 	
 	public Canvas(GraphicsConfiguration config) {
 		graphicsConfig = config;
