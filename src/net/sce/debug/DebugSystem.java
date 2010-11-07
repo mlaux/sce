@@ -37,16 +37,27 @@ public class DebugSystem implements ActionListener {
 		if(pd != null) pd.setEnabled(!pd.isEnabled());
 	}
 	
+	private static void addAll(PaintDebug.Type type, JPopupMenu menu, ActionListener al) {
+		for(String name : debugs.keySet()) {
+			if(debugs.get(name).getType() == type) {
+				JCheckBoxMenuItem mi = new JCheckBoxMenuItem(name);
+				mi.addActionListener(al);
+				menu.add(mi);
+			}
+		}
+	}
+	
 	static {
 		debugs = new LinkedHashMap<String, PaintDebug>();
+		debugs.put("Map BaseX/Y", new BaseXYDebug());
 		debugs.put("Viewport", new ViewportDebug());
+		debugs.put("NPCs", new NPCDebug());
+		
 		JPopupMenu menu = new JPopupMenu("Debug");
 		DebugSystem ds = new DebugSystem();
-		for(String name : debugs.keySet()) {
-			JCheckBoxMenuItem mi = new JCheckBoxMenuItem(name);
-			mi.addActionListener(ds);
-			menu.add(mi);
-		}
+		addAll(PaintDebug.Type.TEXT, menu, ds);
+		menu.addSeparator();
+		addAll(PaintDebug.Type.PAINT, menu, ds);
 		debugMenu = menu;
 	}
 }

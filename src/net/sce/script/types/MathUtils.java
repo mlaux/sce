@@ -73,7 +73,7 @@ public class MathUtils {
 		
 		int plane = 0; // TODO current plane hook
 		int x1 = x >> 9, z1 = z >> 9;
-				
+		
 		if(x1 < 0 || x1 > 103 || z1 < 0 || z1 > 103)
 			return 0;
 		

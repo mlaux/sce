@@ -11,6 +11,10 @@ public class ViewportDebug extends PaintDebug {
 		return "Viewport";
 	}
 	
+	public Type getType() {
+		return Type.TEXT;
+	}
+	
 	public void draw(Graphics g, Bot bot) {
 		FieldAccess fields = bot.getFieldAccess();
 		
