@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FieldAccess {
@@ -22,8 +24,10 @@ public class FieldAccess {
 		// file format, perhaps add a HookReader interface or something and
 		// make the constructor take an instance of that.
 		
-		// Format is hook_name:class_name:field_name
-		// for example, cameraX:jd:Fc
+		// Format is hook_name:class_name:fieldormethod_name:type
+		// for example, client.cameraX:jd:Fc:I
+		// method example: client.changeToolkit:aa:b:(IIII)V
+		// would specify calling aa.b(x, x, x, x)
 		// Empty lines and lines starting with # are ignored
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -32,11 +36,11 @@ public class FieldAccess {
 			if(line.isEmpty() || line.startsWith("#")) continue;
 			
 			String[] parts = line.split(":");
-			if(parts.length < 3) {
+			if(parts.length < 4) {
 				System.out.println("malformed line in hooks file: " + line);
 				continue;
 			}
-			fields.put(parts[0], new FieldOrMethod(parts[1], parts[2]));
+			fields.put(parts[0], new FieldOrMethod(parts[1], parts[2], parts[3]));
 		}
 		br.close();
 	}
@@ -52,6 +56,18 @@ public class FieldAccess {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void set(String key, Object on, Object value) {
+		try {
+			FieldOrMethod cf = fields.get(key);
+			Class<?> cl = classLoader.loadClass(cf.className);
+			Field f = cl.getDeclaredField(cf.compName);
+			f.setAccessible(true);
+			f.set(on, value);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	// Next methods remove need for tedious casting when using get()
@@ -91,7 +107,7 @@ public class FieldAccess {
 		FieldOrMethod fi = fields.get(key);
 		try {
 			Class<?> cl = classLoader.loadClass(fi.className);
-			Method mth = cl.getDeclaredMethod(fi.compName);
+			Method mth = cl.getDeclaredMethod(fi.compName, getArgumentTypes(fi.compType));
 			mth.setAccessible(true);
 			return mth.invoke(on, args);
 		} catch(Exception e) {
@@ -100,16 +116,42 @@ public class FieldAccess {
 		return null;
 	}
 	
+	private Class<?>[] getArgumentTypes(String signature) throws ClassNotFoundException {
+		String types = signature.substring(signature.indexOf('(') + 1, signature.indexOf(')'));
+		List<Class<?>> ret = new ArrayList<Class<?>>();
+		for(int k = 0; k < types.length(); k++) {
+			switch(types.charAt(k)) {
+				case 'B': ret.add(Byte.TYPE); break;
+				case 'S': ret.add(Short.TYPE); break;
+				case 'I': ret.add(Integer.TYPE); break;
+				case 'C': ret.add(Character.TYPE); break;
+				case 'Z': ret.add(Boolean.TYPE); break;
+				case 'J': ret.add(Long.TYPE); break;
+				case 'F': ret.add(Float.TYPE); break;
+				case 'D': ret.add(Double.TYPE); break;
+				case 'L':
+					String type = types.substring(k + 1, types.indexOf(';', k));
+					type = type.replace("/", ".");
+					ret.add(Class.forName(type));
+					k += type.length();
+					break;
+			}
+		}
+		return ret.toArray(new Class<?>[ret.size()]);
+	}
+	
 	/**
 	 * Storage class for class/field names
 	 */
 	private class FieldOrMethod {
 		private String className;
 		private String compName;
+		private String compType;
 		
-		private FieldOrMethod(String c, String f) {
+		private FieldOrMethod(String c, String f, String t) {
 			className = c;
 			compName = f;
+			compType = t;
 		}
 	}
 }

@@ -17,7 +17,6 @@ public abstract class PaintDebug {
 		return enabled;
 	}
 	
-	public abstract String getName();
 	public abstract Type getType();
 	public abstract void draw(Graphics g, Bot bot);
 }

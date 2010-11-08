@@ -9,9 +9,10 @@ public class InputManager implements Paintable {
 	private Component parent;
 	private Component target;
 	
+	public static int realX = 0;
+	public static int realY = 0;
+	
 	private int mouseX, mouseY;
-	public static int MOUSE_X = 0;
-	public static int MOUSE_Y = 0;
 	private int mouseSpeed = 2;
 	
 	private Point[] splinePoints;

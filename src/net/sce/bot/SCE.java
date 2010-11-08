@@ -18,6 +18,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
+import net.sce.bot.tabs.Bot;
 import net.sce.bot.tabs.SCETabbedPane;
 import net.sce.bot.tabs.WelcomeTab;
 import net.sce.debug.DebugSystem;
@@ -69,13 +70,20 @@ public class SCE extends JFrame implements ActionListener {
 		inputButton.setActionCommand("input");
 		inputButton.addActionListener(this);
 		
-		JButton menu = new JButton("Debug");
+		JButton menu = new JButton("Bot");
+		menu.setFocusable(false);
+		menu.setIcon(new ImageIcon(icon_base + "bulldozer.png"));
+		menu.setActionCommand("bot");
+		menu.addActionListener(this);
+		buttons.add(menu);
+		
+		menu = new JButton("Debug");
 		menu.setFocusable(false);
 		menu.setIcon(new ImageIcon(icon_base + "debug.png"));
 		menu.setActionCommand("debug");
 		menu.addActionListener(this);
-		
 		buttons.add(menu);
+		
 		buttons.add(inputButton);
 		glassPane.add(buttons, gbc);
 	}
@@ -92,6 +100,9 @@ public class SCE extends JFrame implements ActionListener {
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
+		} else if(cmd.equals("bot")) {
+			Component c = (Component) e.getSource();
+			Bot.getMenu().show(c, 0, c.getHeight());
 		} else if(cmd.equals("debug")) {
 			Component c = (Component) e.getSource();
 			DebugSystem.getMenu().show(c, 0, c.getHeight());
@@ -100,6 +111,12 @@ public class SCE extends JFrame implements ActionListener {
 	
 	public boolean isInputBlocked() {
 		return inputButton.isSelected();
+	}
+	
+	public Bot getCurrentBot() {
+		Component comp = stp.getSelectedComponent();
+		if(comp == null || !(comp instanceof Bot)) return null;
+		return (Bot) comp;
 	}
 	
 	public static SCE getInstance() {

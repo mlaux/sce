@@ -18,8 +18,8 @@ public class SCEEventQueue extends EventQueue {
 		}
 		if(event.toString().contains("MOUSE_MOVED")) {
 			MouseEvent me = (MouseEvent)event;
-			InputManager.MOUSE_X = me.getX();
-			InputManager.MOUSE_Y = me.getY();
+			InputManager.realX = me.getX();
+			InputManager.realY = me.getY();
 		}
 		super.dispatchEvent(event);
 	}

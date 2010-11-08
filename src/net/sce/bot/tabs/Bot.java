@@ -5,6 +5,8 @@ import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.awt.Canvas;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -12,7 +14,12 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+
 import net.sce.bot.AccountManager;
+import net.sce.bot.SCE;
 import net.sce.debug.DebugSystem;
 import net.sce.script.API;
 import net.sce.script.Paintable;
@@ -22,6 +29,7 @@ import net.sce.util.ParamParser;
 
 public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 	public static URL base_url, jar_url;
+	private static final JPopupMenu botMenu;
 	
 	private Applet client, loader;
 	private volatile boolean running = false;
@@ -108,6 +116,10 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 	public AppletContext getAppletContext() { return null; }
 	public void appletResize(int width, int height) { }
 	
+	public static JPopupMenu getMenu() {
+		return botMenu;
+	}
+	
 	static {
 		String base = "http://world1.runescape.com/";
 		try {
@@ -115,6 +127,23 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 			jar_url = new URL(base + "loader.jar");
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		botMenu = new JPopupMenu("Bot");
+		BotMenuActionListener al = new BotMenuActionListener();
+		JMenuItem it = new JMenuItem("Start script...");
+		it.addActionListener(al);
+		botMenu.add(it);
+		botMenu.addSeparator();
+		it = new JMenuItem("Stop script");
+		it.addActionListener(al);
+		botMenu.add(it);
+	}
+	
+	private static final class BotMenuActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			String cmd = e.getActionCommand();
+			Bot bot = SCE.getInstance().getCurrentBot();
 		}
 	}
 }

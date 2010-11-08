@@ -7,10 +7,6 @@ import net.sce.bot.tabs.Bot;
 import net.sce.util.FieldAccess;
 
 public class BaseXYDebug extends PaintDebug {
-	public String getName() {
-		return "Map BaseX/Y";
-	}
-
 	public Type getType() {
 		return Type.TEXT;
 	}

@@ -8,9 +8,6 @@ import java.awt.*;
 
 public class NPCDebug extends PaintDebug {
 	private static final Font idFont = new Font(Font.SANS_SERIF, Font.PLAIN, 10);
-	public String getName() {
-		return "NPCs";
-	}
 
 	public Type getType() {
 		return Type.PAINT;

@@ -7,10 +7,6 @@ import net.sce.bot.tabs.Bot;
 import net.sce.util.FieldAccess;
 
 public class ViewportDebug extends PaintDebug {
-	public String getName() {
-		return "Viewport";
-	}
-	
 	public Type getType() {
 		return Type.TEXT;
 	}
