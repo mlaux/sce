@@ -1,13 +1,10 @@
 package net.sce.debug;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Point;
-
 import net.sce.bot.tabs.Bot;
 import net.sce.script.types.MathUtils;
 import net.sce.util.FieldAccess;
+
+import java.awt.*;
 
 public class NPCDebug extends PaintDebug {
 	private static final Font idFont = new Font(Font.SANS_SERIF, Font.PLAIN, 10);

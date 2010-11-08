@@ -1,12 +1,12 @@
 package net.sce.util;
 
-import java.awt.AWTEvent;
-import java.awt.EventQueue;
+import net.sce.bot.SCE;
+import net.sce.script.input.InputManager;
+
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-
-import net.sce.bot.SCE;
 
 public class SCEEventQueue extends EventQueue {
 	
@@ -15,6 +15,11 @@ public class SCEEventQueue extends EventQueue {
 		if(cl.equals(java.awt.Canvas.class)) {
 			if(SCE.getInstance().isInputBlocked()
 					&& isBlockedType(event)) return;
+		}
+		if(event.toString().contains("MOUSE_MOVED")) {
+			MouseEvent me = (MouseEvent)event;
+			InputManager.MOUSE_X = me.getX();
+			InputManager.MOUSE_Y = me.getY();
 		}
 		super.dispatchEvent(event);
 	}

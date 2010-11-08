@@ -1,15 +1,13 @@
 package net.sce.debug;
 
-import java.awt.Graphics;
+import net.sce.bot.tabs.Bot;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JPopupMenu;
-
-import net.sce.bot.tabs.Bot;
 
 public class DebugSystem implements ActionListener {
 	private static final Map<String, PaintDebug> debugs;
@@ -52,6 +50,7 @@ public class DebugSystem implements ActionListener {
 		debugs.put("Map BaseX/Y", new BaseXYDebug());
 		debugs.put("Viewport", new ViewportDebug());
 		debugs.put("NPCs", new NPCDebug());
+		debugs.put("Mouse", new MouseDebug());
 		
 		JPopupMenu menu = new JPopupMenu("Debug");
 		DebugSystem ds = new DebugSystem();

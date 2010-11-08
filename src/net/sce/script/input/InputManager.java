@@ -1,19 +1,17 @@
 package net.sce.script.input;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
-
 import net.sce.script.Paintable;
+
+import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class InputManager implements Paintable {
 	private Component parent;
 	private Component target;
 	
 	private int mouseX, mouseY;
+	public static int MOUSE_X = 0;
+	public static int MOUSE_Y = 0;
 	private int mouseSpeed = 2;
 	
 	private Point[] splinePoints;
