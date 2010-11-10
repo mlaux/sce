@@ -149,9 +149,14 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 				ssel.setVisible(true);
 				ScriptInfo info = ssel.getSelectedScript();
 				if(info == null) return;
-				Script script = info.load();
-				bot.setScript(script);
-				new Thread(script).start();
+				Script script;
+				try {
+					script = info.loadScript(bot);
+					bot.setScript(script);
+					new Thread(script).start();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 			} else if(cmd.equals("Stop script")) {
 				// TODO Destroy script, stop threads, etc etc
 				bot.setScript(null);

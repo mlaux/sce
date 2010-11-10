@@ -3,6 +3,9 @@ import java.awt.Graphics;
 import net.sce.script.Script;
 
 public class TestScript extends Script {
+	private static final String author = "Tekk";
+	private static final String description = "<html><i>Hi, I am a test script.</i></html>";
+	
 	public void onStart() {
 		// TODO Auto-generated method stub
 		
@@ -24,7 +27,6 @@ public class TestScript extends Script {
 	}
 	
 	public int loop() {
-		
 		return 1000;
 	}
 	

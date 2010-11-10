@@ -1,8 +1,11 @@
 package net.sce.bot.website;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sce.bot.tabs.Bot;
 import net.sce.script.Script;
 
 public class ScriptInfo {
@@ -10,23 +13,26 @@ public class ScriptInfo {
 	public String author;
 	public String description;
 	public Map<String, String> arguments;
+	public URL pathURL;
 	
-	private ScriptLoader loader;
-	
-	public ScriptInfo(String n, String a, String d, ScriptLoader l) {
+	public ScriptInfo(String n, String a, String d, URL u) {
 		name = n;
 		author = a;
 		description = d;
 		arguments = new HashMap<String, String>();
-		
-		loader = l;
+		pathURL = u;
 	}
 	
 	public String toString() {
 		return name;
 	}
-	
-	public Script load() {
-		return loader.loadScript(this);
+
+	public Script loadScript(Bot bot) throws ClassNotFoundException,
+			InstantiationException, IllegalAccessException {
+		URLClassLoader ucl = new URLClassLoader(new URL[] { pathURL });
+		Class<?> cl = ucl.loadClass(name);
+		Script scr = (Script) cl.newInstance();
+		scr.init(this, bot.getAPI());
+		return scr;
 	}
 }
