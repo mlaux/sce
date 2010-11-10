@@ -1,11 +1,15 @@
 package net.sce.script.input;
 
-import net.sce.script.Paintable;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 
-public class InputManager implements Paintable {
+import net.sce.bot.tabs.Bot;
+
+public class InputManager {
 	private Component parent;
 	private Component target;
 	
@@ -17,9 +21,9 @@ public class InputManager implements Paintable {
 	
 	private Point[] splinePoints;
 	
-	public InputManager(Component app) {
-		parent = app;
-		target = app.getComponentAt(0, 0);
+	public InputManager(Bot bot) {
+		parent = bot.getLoader();
+		target = parent.getComponentAt(0, 0);
 	}
 	
 	private void checkTargetValidity() {
@@ -53,7 +57,7 @@ public class InputManager implements Paintable {
 		// splinePoints = null;
 	}
 	
-	public void paint(Graphics g) {
+	public void drawMouse(Graphics g) {
 		g.setColor(Color.yellow);
 		g.drawLine(mouseX - 8, mouseY, mouseX + 8, mouseY);
 		g.drawLine(mouseX, mouseY - 8, mouseX, mouseY + 8);

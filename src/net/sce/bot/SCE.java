@@ -47,6 +47,7 @@ public class SCE extends JFrame implements ActionListener {
 		add(stp);
 		addTopButtons();
 		pack();
+		setLocationRelativeTo(null);
 		setVisible(true);
 		new MemoryTracker().start();
 	}
@@ -102,10 +103,10 @@ public class SCE extends JFrame implements ActionListener {
 			}
 		} else if(cmd.equals("bot")) {
 			Component c = (Component) e.getSource();
-			Bot.getMenu().show(c, 0, c.getHeight());
+			Bot.getMenu().show(c, 0, c.getHeight() + 5);
 		} else if(cmd.equals("debug")) {
 			Component c = (Component) e.getSource();
-			DebugSystem.getMenu().show(c, 0, c.getHeight());
+			DebugSystem.getMenu().show(c, 0, c.getHeight() + 5);
 		}
 	}
 	

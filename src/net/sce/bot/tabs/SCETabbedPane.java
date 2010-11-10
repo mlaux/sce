@@ -36,7 +36,7 @@ public class SCETabbedPane extends JTabbedPane {
 		if(!(component instanceof SCETabbedPane.Tab))
 			throw new IllegalArgumentException("SCETabbedPanes can only contain SCETabbedPane.Tabs");
 		super.insertTab(title, icon, component, tip, index);
-		this.setTabComponentAt(index, new CloseLabel(title, (SCETabbedPane.Tab) component));
+		setTabComponentAt(index, new CloseLabel(title, (SCETabbedPane.Tab) component));
 	}
 	
 	public void createBot() {
@@ -73,14 +73,18 @@ public class SCETabbedPane extends JTabbedPane {
 	private class CloseLabel extends JPanel {
 		public CloseLabel(String title, final Tab comp) {
 			setOpaque(false);
-			setFocusable(false);
-			add(new JLabel(title));
 			
-			JLabel label = new JLabel(new ImageIcon(SCE.icon_base + "close.png"));
-			label.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) { comp.onClose(); SCETabbedPane.this.remove(comp); }
-			});
-			add(label);
+			JLabel lab = new JLabel(title);
+			lab.setPreferredSize(new Dimension(lab.getPreferredSize().width, 16));
+			add(lab);
+			
+			if(!title.equals("Welcome")) {
+				lab = new JLabel(new ImageIcon(SCE.icon_base + "close.png"));
+				lab.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent e) { comp.onClose(); SCETabbedPane.this.remove(comp); }
+				});
+				add(lab);
+			}
 		}
 	}
 }

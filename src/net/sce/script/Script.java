@@ -1,13 +1,27 @@
 package net.sce.script;
 
-import java.util.Map;
+import java.awt.Graphics;
 
-public abstract class Script extends WrapperProvider implements Runnable {
-	private Map<String, String> arguments;
+import net.sce.bot.website.ScriptInfo;
+import net.sce.script.input.InputManager;
+import net.sce.script.types.MathUtils;
+
+public abstract class Script implements Runnable {
+	protected ScriptInfo info;
 	
-	public Script(API api, Map<String, String> args) {
-		super(api);
-		arguments = args;
+	protected MathUtils math;
+	protected InputManager input;
+	
+	/* 
+	 * Can't do this in a constructor because that would require
+	 * every script to define a constructor which calls super(info, api)
+	 * and that is sort of ugly.
+	 */
+	public void init(ScriptInfo i, API api) {
+		info = i;
+		
+		math = api.getMathUtils();
+		input = api.getInputManager();
 	}
 	
 	/**
@@ -33,9 +47,8 @@ public abstract class Script extends WrapperProvider implements Runnable {
 	public abstract void onStop();
 	public abstract void onPause();
 	public abstract void onResume();
+	public abstract void paint(Graphics g);
 
 	public void script() { }
 	public int loop() { return -1; }
-	
-	public Map<String, String> getArguments() { return arguments; }
 }

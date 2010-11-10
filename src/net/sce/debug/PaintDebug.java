@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import net.sce.bot.tabs.Bot;
 
 public abstract class PaintDebug {
-	enum Type { TEXT, PAINT; }
+	public enum Type { TEXT, PAINT; }
 	
 	private boolean enabled;
 	

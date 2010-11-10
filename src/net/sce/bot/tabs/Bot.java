@@ -11,19 +11,18 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import net.sce.bot.AccountManager;
 import net.sce.bot.SCE;
+import net.sce.bot.ScriptSelector;
+import net.sce.bot.website.LocalScriptLoader;
+import net.sce.bot.website.ScriptInfo;
 import net.sce.debug.DebugSystem;
 import net.sce.script.API;
-import net.sce.script.Paintable;
-import net.sce.script.input.InputManager;
+import net.sce.script.Script;
 import net.sce.util.FieldAccess;
 import net.sce.util.ParamParser;
 
@@ -36,14 +35,12 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 	
 	private AccountManager.Account account;
 	private FieldAccess fieldAccess;
-	private InputManager inputManager;
-	private List<Paintable> paintables;
 	
 	private API api;
+	private Script currentScript;
 	
 	public Bot(AccountManager.Account acc) {
 		account = acc;
-		paintables = new ArrayList<Paintable>();
 	}
 	
 	public void run() {
@@ -89,14 +86,17 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 			e.printStackTrace();
 		}
 		api = new API(this);
-		
-		inputManager = new InputManager(loader);
-		paintables.add(inputManager);
 	}
 	
 	public void doClientPainting(Graphics g) {
-		for(Paintable pt : paintables) pt.paint(g);
+		api.getInputManager().drawMouse(g);
 		DebugSystem.draw(g, this);
+		if(currentScript != null)
+			currentScript.paint(g);
+	}
+	
+	public void setScript(Script s) {
+		currentScript = s;
 	}
 	
 	// Should we restrict these?
@@ -144,6 +144,18 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 		public void actionPerformed(ActionEvent e) {
 			String cmd = e.getActionCommand();
 			Bot bot = SCE.getInstance().getCurrentBot();
+			if(cmd.equals("Start script...")) {
+				ScriptSelector ssel = new ScriptSelector(SCE.getInstance(), new LocalScriptLoader());
+				ssel.setVisible(true);
+				ScriptInfo info = ssel.getSelectedScript();
+				if(info == null) return;
+				Script script = info.load();
+				bot.setScript(script);
+				new Thread(script).start();
+			} else if(cmd.equals("Stop script")) {
+				// TODO Destroy script, stop threads, etc etc
+				bot.setScript(null);
+			}
 		}
 	}
 }
