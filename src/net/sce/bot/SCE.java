@@ -91,7 +91,7 @@ public class SCE extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
-		if(cmd.equals("newbot")) stp.createBot();
+		if(cmd.equals("newbot")) createBot();
 		else if(cmd.equals("accounts")) {
 			AccountManager acm = new AccountManager(this, AccountManager.Intent.MANAGE);
 			acm.setVisible(true);
@@ -118,6 +118,10 @@ public class SCE extends JFrame implements ActionListener {
 		Component comp = stp.getSelectedComponent();
 		if(comp == null || !(comp instanceof Bot)) return null;
 		return (Bot) comp;
+	}
+	
+	public Bot createBot() {
+		return stp.createBot();
 	}
 	
 	public static SCE getInstance() {

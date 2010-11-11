@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,25 +24,32 @@ import javax.swing.tree.DefaultTreeModel;
 import net.sce.bot.website.ScriptInfo;
 import net.sce.bot.website.ScriptLoader;
 
-public class ScriptSelector extends JDialog implements TreeSelectionListener {
+public class ScriptSelector extends JDialog implements ActionListener, TreeSelectionListener {
+	public static final int START_OPTION = 1;
+	public static final int CANCEL_OPTION = 0;
+	
 	private static final String default_desc = "<html><i>Select a script to get information about it.</i></html>";
 	private static final String default_author = "Author: <no script selected>";
 	
+	private JTree scriptTree;
 	private JLabel authorLabel;
 	private JEditorPane textPane;
 	
+	private int result;
+	
 	public ScriptSelector(Frame parent, ScriptLoader... loaders) {
 		super(parent, "Script Selector");
+		setModalityType(ModalityType.APPLICATION_MODAL);
 		
 		JPanel pane = new JPanel(new BorderLayout());
 		pane.setBorder(new EmptyBorder(10, 10, 10, 10));
 		
-		JTree tree = new JTree(loadAllScripts(loaders));
-		for (int k = 0; k < tree.getRowCount(); k++)
-			tree.expandRow(k);
-		tree.setRootVisible(false);
-		tree.addTreeSelectionListener(this);
-		tree.setPreferredSize(new Dimension(150, 200));
+		scriptTree = new JTree(loadAllScripts(loaders));
+		for (int k = 0; k < scriptTree.getRowCount(); k++)
+			scriptTree.expandRow(k);
+		scriptTree.setRootVisible(false);
+		scriptTree.addTreeSelectionListener(this);
+		scriptTree.setPreferredSize(new Dimension(150, 200));
 		
 		textPane = new JEditorPane("text/html", default_desc);
 		textPane.setEditable(false);
@@ -53,20 +62,36 @@ public class ScriptSelector extends JDialog implements TreeSelectionListener {
 		editpanel.add(authorLabel, BorderLayout.NORTH);
 		editpanel.add(new JScrollPane(textPane), BorderLayout.CENTER);
 		
-		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tree, editpanel);
+		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptTree, editpanel);
 		pane.add(split, BorderLayout.CENTER);
 		
 		JPanel bottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
 		JButton button = new JButton("Close");
+		button.addActionListener(this);
 		bottom.add(button);
 		button = new JButton("Start script");
+		button.addActionListener(this);
 		bottom.add(button);
 		pane.add(bottom, BorderLayout.SOUTH);
 		
 		add(pane);
 		pack();
 		setLocationRelativeTo(parent);
+	}
+	
+	public int showDialog() {
+		setVisible(true);
+		return result;
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		String cmd = e.getActionCommand();
+		if(cmd.equals("Start script"))
+			result = START_OPTION;
+		else if(cmd.equals("Close"))
+			result = CANCEL_OPTION;
+		dispose();
 	}
 	
 	public void valueChanged(TreeSelectionEvent e) {
@@ -94,6 +119,11 @@ public class ScriptSelector extends JDialog implements TreeSelectionListener {
 	}
 	
 	public ScriptInfo getSelectedScript() {
-		return null;
+		Object obj = ((DefaultMutableTreeNode) scriptTree.getSelectionPath()
+				.getLastPathComponent()).getUserObject();
+		if(!(obj instanceof ScriptInfo))
+			return null;
+		
+		return (ScriptInfo) obj;
 	}
 }

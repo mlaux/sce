@@ -39,15 +39,15 @@ public class SCETabbedPane extends JTabbedPane {
 		setTabComponentAt(index, new CloseLabel(title, (SCETabbedPane.Tab) component));
 	}
 	
-	public void createBot() {
+	public Bot createBot() {
 		AccountSelectDialog accsel = new AccountSelectDialog(this);
 		accsel.setVisible(true);
 		AccountManager.Account acc = accsel.getInfo();
-		if(acc == null) return; // they pressed cancel
+		if(acc == null) return null; // they pressed cancel
 		Bot bot = new Bot(acc);
 		addTab(acc.username, bot);
 		setSelectedIndex(indexOfComponent(bot));
-		new Thread(bot).start();
+		return bot;
 	}
 	
 	public abstract static class Tab extends JPanel {

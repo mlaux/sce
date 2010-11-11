@@ -26,24 +26,21 @@ import net.sce.script.Script;
 import net.sce.util.FieldAccess;
 import net.sce.util.ParamParser;
 
-public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
-	public static URL base_url, jar_url;
+public class Bot extends SCETabbedPane.Tab implements AppletStub {
+	private static URL base_url, jar_url;
 	private static final JPopupMenu botMenu;
 	
 	private Applet client, loader;
-	private volatile boolean running = false;
 	
 	private AccountManager.Account account;
 	private FieldAccess fieldAccess;
 	
 	private API api;
 	private Script currentScript;
+	private ThreadGroup scriptThreads;
 	
 	public Bot(AccountManager.Account acc) {
 		account = acc;
-	}
-	
-	public void run() {
 		try {
 			Class<?> cl = new URLClassLoader(new URL[] { jar_url }).loadClass("loader");
 			loader = (Applet) cl.newInstance();
@@ -64,18 +61,13 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 				}
 			}
 			initClientDependencies();
-			running = true;
-			while (running) {
-				Thread.sleep(1000);
-			}
-			remove(loader);
-			loader.stop();
-			loader.destroy();
-			loader = null;
-			System.gc();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void onClose() {
+		new Thread(new ShutdownTask()).start();
 	}
 	
 	private void initClientDependencies() {
@@ -95,8 +87,12 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 			currentScript.paint(g);
 	}
 	
-	public void setScript(Script s) {
-		currentScript = s;
+	@SuppressWarnings("deprecation")
+	public void stopScript() {
+		currentScript.onStop();
+		scriptThreads.stop();
+		currentScript = null;
+		scriptThreads = null;
 	}
 	
 	// Should we restrict these?
@@ -108,7 +104,6 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 	public FieldAccess getFieldAccess() { return fieldAccess; }
 	
 	// Boring implemented methods
-	public void onClose() { running = false; }
 	public String getParameter(String name) { return ParamParser.get(name); }
 	public boolean isActive() { return true; }
 	public URL getDocumentBase() { return base_url; }
@@ -140,26 +135,37 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub, Runnable {
 		botMenu.add(it);
 	}
 	
-	private static final class BotMenuActionListener implements ActionListener {
+	private class ShutdownTask implements Runnable {
+		public void run() {
+			loader.stop();
+			loader.destroy();
+			loader = null;
+			System.gc();
+		}
+	}
+	
+	private static class BotMenuActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			String cmd = e.getActionCommand();
 			Bot bot = SCE.getInstance().getCurrentBot();
 			if(cmd.equals("Start script...")) {
+				if(bot == null) bot = SCE.getInstance().createBot();
 				ScriptSelector ssel = new ScriptSelector(SCE.getInstance(), new LocalScriptLoader());
-				ssel.setVisible(true);
-				ScriptInfo info = ssel.getSelectedScript();
-				if(info == null) return;
-				Script script;
-				try {
-					script = info.loadScript(bot);
-					bot.setScript(script);
-					new Thread(script).start();
-				} catch (Exception e1) {
-					e1.printStackTrace();
+				if(ssel.showDialog() == ScriptSelector.START_OPTION) {
+					ScriptInfo info = ssel.getSelectedScript();
+					if(info == null) return;
+					try {
+						Script script = info.loadScript(bot);
+						bot.currentScript = script;
+						bot.scriptThreads = new ThreadGroup(script.getClass().getSimpleName());
+						Thread th = new Thread(bot.scriptThreads, script, "Script");
+						th.start();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 				}
 			} else if(cmd.equals("Stop script")) {
-				// TODO Destroy script, stop threads, etc etc
-				bot.setScript(null);
+				bot.stopScript();
 			}
 		}
 	}

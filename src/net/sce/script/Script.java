@@ -30,7 +30,7 @@ public abstract class Script implements Runnable {
 	 */
 	public void run() {
 		try {
-			onStart();
+			if(!onStart()) return;
 			script();
 			int time;
 			while((time = loop()) > 0)
@@ -43,7 +43,7 @@ public abstract class Script implements Runnable {
 		}
 	}
 	
-	public abstract void onStart();
+	public abstract boolean onStart();
 	public abstract void onStop();
 	public abstract void onPause();
 	public abstract void onResume();
