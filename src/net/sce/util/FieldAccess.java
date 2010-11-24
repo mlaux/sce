@@ -24,10 +24,10 @@ public class FieldAccess {
 		// file format, perhaps add a HookReader interface or something and
 		// make the constructor take an instance of that.
 		
-		// Format is hook_name:class_name:fieldormethod_name:type
+		// Format is hook_name:class_name:fieldormethod_name:type:dummy
 		// for example, client.cameraX:jd:Fc:I
-		// method example: client.changeToolkit:aa:b:(IIII)V
-		// would specify calling aa.b(x, x, x, x)
+		// method example: client.changeToolkit:aa:b:(IIII)V:23
+		// would specify calling aa.b(23, x, x, x)
 		// Empty lines and lines starting with # are ignored
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -40,7 +40,8 @@ public class FieldAccess {
 				System.out.println("malformed line in hooks file: " + line);
 				continue;
 			}
-			fields.put(parts[0], new FieldOrMethod(parts[1], parts[2], parts[3]));
+			
+			fields.put(parts[0], new FieldOrMethod(parts[1], parts[2], parts[3], parts.length >= 5 ? parts[4] : "-1"));
 		}
 		br.close();
 	}
@@ -109,7 +110,10 @@ public class FieldAccess {
 			Class<?> cl = classLoader.loadClass(fi.className);
 			Method mth = cl.getDeclaredMethod(fi.compName, getArgumentTypes(fi.compType));
 			mth.setAccessible(true);
-			return mth.invoke(on, args);
+			if(fi.dummy != -1)
+				return mth.invoke(on, fi.dummy);
+			else
+				return mth.invoke(on, args);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -147,11 +151,13 @@ public class FieldAccess {
 		private String className;
 		private String compName;
 		private String compType;
+		private int dummy;
 		
-		private FieldOrMethod(String c, String f, String t) {
+		private FieldOrMethod(String c, String f, String t, String d) {
 			className = c;
 			compName = f;
 			compType = t;
+			dummy = Integer.parseInt(d);
 		}
 	}
 }
