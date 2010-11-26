@@ -1,20 +1,5 @@
 package net.sce.bot.tabs;
 
-import java.applet.Applet;
-import java.applet.AppletContext;
-import java.applet.AppletStub;
-import java.awt.Canvas;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-
 import net.sce.bot.AccountManager;
 import net.sce.bot.SCE;
 import net.sce.bot.ScriptSelector;
@@ -25,6 +10,18 @@ import net.sce.script.API;
 import net.sce.script.Script;
 import net.sce.util.FieldAccess;
 import net.sce.util.ParamParser;
+
+import javax.swing.*;
+import java.applet.Applet;
+import java.applet.AppletContext;
+import java.applet.AppletStub;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class Bot extends SCETabbedPane.Tab implements AppletStub {
 	private static URL base_url, jar_url;
@@ -114,7 +111,7 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub {
 	public static JPopupMenu getMenu() {
 		return botMenu;
 	}
-	
+
 	static {
 		String base = "http://world1.runescape.com/";
 		try {

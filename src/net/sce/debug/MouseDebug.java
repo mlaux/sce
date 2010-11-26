@@ -13,6 +13,9 @@ public class MouseDebug extends PaintDebug {
 	public void draw(Graphics g, Bot bot) {
 		int x = InputManager.realX;
 		int y = InputManager.realY;
-		g.drawString("(" + x + "," + y + ")", x + 10, y + 10);
+		if(x >= 700)
+			g.drawString("(" + x + "," + y + ")", x - 50, y + 10);      
+		else
+			g.drawString("(" + x + "," + y + ")", x + 10, y + 10);
 	}
 }

@@ -23,9 +23,8 @@ public class NPCDebug extends PaintDebug {
 			if(npc == null) continue;
 			Object def = fields.get("npc.definition", npc);
 			if(def == null) continue;
-			int x = fields.getInt("sceneNode.localX", npc);
-			int y = fields.getInt("sceneNode.localY", npc);
-			
+			int x = fields.getInt("entity.localX", npc);
+			int y = fields.getInt("entity.localY", npc);
 			MathUtils mu = bot.getAPI().getMathUtils();
 			int z = mu.getTileHeight(x, y) - 256;
 			Point p = mu.worldToScreen(x, z, y);

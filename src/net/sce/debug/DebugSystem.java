@@ -51,6 +51,7 @@ public class DebugSystem implements ActionListener {
 		debugs.put("Viewport", new ViewportDebug());
 		debugs.put("NPCs", new NPCDebug());
 		debugs.put("Mouse", new MouseDebug());
+		debugs.put("GameState", new GameStateDebug());
 		
 		JPopupMenu menu = new JPopupMenu("Debug");
 		DebugSystem ds = new DebugSystem();
