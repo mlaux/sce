@@ -47,23 +47,32 @@ public class FieldAccess {
 	}
 	
 	public Object get(String key, Object on) {
+		FieldOrMethod cf = fields.get(key);
+		return getDirect(cf.className, cf.compName, on);
+
+	}
+
+	public Object getDirect(String cName, String fName, Object on) {
 		try {
-			FieldOrMethod cf = fields.get(key);
-			Class<?> cl = classLoader.loadClass(cf.className);
-			Field f = cl.getDeclaredField(cf.compName);
+			Class<?> cl = classLoader.loadClass(cName);
+			Field f = cl.getDeclaredField(fName);
 			f.setAccessible(true);
 			return f.get(on);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
 	public void set(String key, Object on, Object value) {
+		FieldOrMethod cf = fields.get(key);
+		setDirect(cf.className, cf.compName, on, value);
+	}
+	
+	public void setDirect(String cName, String fName, Object on, Object value) {
 		try {
-			FieldOrMethod cf = fields.get(key);
-			Class<?> cl = classLoader.loadClass(cf.className);
-			Field f = cl.getDeclaredField(cf.compName);
+			Class<?> cl = classLoader.loadClass(cName);
+			Field f = cl.getDeclaredField(fName);
 			f.setAccessible(true);
 			f.set(on, value);
 		} catch(Exception e) {
@@ -147,7 +156,7 @@ public class FieldAccess {
 	/**
 	 * Storage class for class/field names
 	 */
-	private class FieldOrMethod {
+	private static class FieldOrMethod {
 		private String className;
 		private String compName;
 		private String compType;

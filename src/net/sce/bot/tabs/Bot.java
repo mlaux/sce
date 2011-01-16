@@ -70,7 +70,7 @@ public class Bot extends SCETabbedPane.Tab implements AppletStub {
 	private void initClientDependencies() {
 		try {
 			// TODO Get hooks file based on client version
-			fieldAccess = new FieldAccess(client.getClass().getClassLoader(), new File("hooks0.txt").toURI().toURL());
+			fieldAccess = new FieldAccess(client.getClass().getClassLoader(), new File("hooks634.txt").toURI().toURL());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,22 +1,29 @@
 package net.sce.debug;
 
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Icon;
+import javax.swing.JCheckBoxMenuItem;
 
 import net.sce.bot.tabs.Bot;
 
-public abstract class PaintDebug {
-	public enum Type { TEXT, PAINT; }
+public class PaintDebug extends JCheckBoxMenuItem implements ActionListener {
+	private DebugTask task;
 	
-	private boolean enabled;
-	
-	public void setEnabled(boolean b) {
-		enabled = b;
+	public PaintDebug(String text, Icon icon, DebugTask tsk) {
+		super(text, icon);
+		task = tsk;
+		addActionListener(this);
 	}
 	
-	public boolean isEnabled() {
-		return enabled;
+	public void actionPerformed(ActionEvent e) {
+		setSelected(!isSelected());
 	}
 	
-	public abstract Type getType();
-	public abstract void draw(Graphics g, Bot bot);
+	public void draw(Graphics g, Bot bot) {
+		if(isSelected())
+			task.draw(g, bot);
+	}
 }
