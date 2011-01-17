@@ -10,7 +10,7 @@ import javax.swing.JPopupMenu;
 
 import net.sce.bot.tabs.Bot;
 import net.sce.debug.items.BaseXYDebug;
-import net.sce.debug.items.ConsoleCommandDebug;
+import net.sce.debug.items.InterfaceExplorerDebug;
 import net.sce.debug.items.GameStateDebug;
 import net.sce.debug.items.MouseDebug;
 import net.sce.debug.items.NPCDebug;
@@ -43,7 +43,7 @@ public class DebugSystem {
 		debugMenu = new JPopupMenu("Debug");
 		
 		debugs = new ArrayList<OneTimeDebug>();
-		add("Run console command...", null, new ConsoleCommandDebug(), false);
+		add("Interface explorer...", null, new InterfaceExplorerDebug(), false);
 		
 		debugMenu.addSeparator();
 		
